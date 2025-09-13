@@ -1,26 +1,19 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer base {
+  body {
+    @apply bg-[#141414] text-white;
+  }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  header {
+    @apply fixed top-0 z-50 flex w-full items-center justify-between
+    px-4 py-4 transition-all lg:px-10 lg:py-6;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .headerLink {
+    @apply cursor-pointer text-sm font-light text-[#e5e5e5]
+         transition duration-[400ms] hover:text-[#b3b3b3];
+  }
 }
