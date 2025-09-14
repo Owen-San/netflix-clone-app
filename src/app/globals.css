@@ -1,23 +1,71 @@
 @import "tailwindcss";
+@plugin "tailwind-scrollbar" { nocompatible: true; }
+
+:root { --scrollbar-size: 6px; }
 
 @layer base {
+  html {
+    @apply !scrollbar !scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-transparent;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(239 68 68) transparent;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    min-height: 100%;
+  }
+
   body {
-    @apply bg-[#141414] text-white;
+    @apply bg-[#141414] text-white
+           bg-gradient-to-b
+           from-[#0b0b0f] from-[0%]
+           via-[#141414]/70 via-[55%]
+           to-[#141414] to-[100%];
+    background-attachment: fixed;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  html::-webkit-scrollbar {
+    width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
+  }
+
+  html::-webkit-scrollbar:horizontal {
+    height: 0;
+  }
+
+  html::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background: rgb(239 68 68);
+    border-radius: 9999px;
   }
 
   header {
     @apply fixed top-0 z-50 flex w-full items-center justify-between
-    px-4 py-4 transition-all lg:px-10 lg:py-6;
+           px-4 py-4 transition-all lg:px-10 lg:py-6;
   }
 }
 
 @layer components {
   .headerLink {
     @apply cursor-pointer text-sm font-light text-[#e5e5e5]
-         transition duration-[400ms] hover:text-[#b3b3b3];
+           transition duration-[400ms] hover:text-[#b3b3b3];
   }
 
   .bannerButton {
-    @apply flex items-center gap-x-2 rounded px-5 py-1.5 text-sm font-semibold transition hover:opacity-75 md:py-2.5 md:px-8 md:text-xl;
+    @apply flex items-center gap-x-2 rounded px-5 py-1.5 text-sm font-semibold
+           transition hover:opacity-75 md:py-2.5 md:px-8 md:text-xl;
   }
+}
+
+@layer utilities {
+  .scrollbar-thin-red {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(239 68 68) transparent;
+  }
+  .scrollbar-thin-red::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scrollbar-thin-red::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin-red::-webkit-scrollbar-thumb { background: rgb(239 68 68); border-radius: 9999px; }
 }
