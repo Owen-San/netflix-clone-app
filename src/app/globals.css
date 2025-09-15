@@ -1,11 +1,15 @@
 @import "tailwindcss";
-@plugin "tailwind-scrollbar" { nocompatible: true; }
+@plugin "tailwind-scrollbar" {
+  nocompatible: true;
+}
 
-:root { --scrollbar-size: 6px; }
+:root {
+  --scrollbar-size: 6px;
+}
 
 @layer base {
   html {
-    @apply !scrollbar !scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-transparent;
+    @apply !scrollbar-thin scrollbar-thumb-red-500 scrollbar-track-transparent;
     scrollbar-width: thin;
     scrollbar-color: rgb(239 68 68) transparent;
     overflow-x: hidden;
@@ -58,6 +62,10 @@
     @apply flex items-center gap-x-2 rounded px-5 py-1.5 text-sm font-semibold
            transition hover:opacity-75 md:py-2.5 md:px-8 md:text-xl;
   }
+
+  .input {
+    @apply w-full rounded bg-[#333] px-5 py-3.5 placeholder-[gray] outline-none focus:bg-[#454545];
+  }
 }
 
 @layer utilities {
@@ -65,7 +73,15 @@
     scrollbar-width: thin;
     scrollbar-color: rgb(239 68 68) transparent;
   }
-  .scrollbar-thin-red::-webkit-scrollbar { width: 6px; height: 6px; }
-  .scrollbar-thin-red::-webkit-scrollbar-track { background: transparent; }
-  .scrollbar-thin-red::-webkit-scrollbar-thumb { background: rgb(239 68 68); border-radius: 9999px; }
+  .scrollbar-thin-red::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin-red::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin-red::-webkit-scrollbar-thumb {
+    background: rgb(239 68 68);
+    border-radius: 9999px;
+  }
 }
