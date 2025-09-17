@@ -1,4 +1,3 @@
-// components/Header.tsx
 "use client";
 
 import { BellIcon, SearchIcon } from "@heroicons/react/outline";
