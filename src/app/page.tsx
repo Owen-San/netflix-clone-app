@@ -14,7 +14,6 @@ import Modal from "../../components/Modal";
 const BannerComp = Banner as unknown as React.ComponentType<{ netflixOriginals: Movie[] }>;
 
 export default function Page() {
-  // Ensure Recoil provider is above any component that uses Recoil hooks
   return (
     <RecoilRoot>
       <HomeContent />
