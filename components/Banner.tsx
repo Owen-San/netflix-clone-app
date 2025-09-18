@@ -26,21 +26,30 @@ function Banner({ netflixOriginals }: Props) {
     }
   }, [netflixOriginals]);
 
-  const imgSrc =
+  const imgPath =
     movie?.backdrop_path || movie?.poster_path
-      ? `${baseUrl}${movie.backdrop_path ?? movie.poster_path}`
+      ? (movie.backdrop_path ?? movie.poster_path)!
       : "";
+
+  const imgSrc = imgPath ? `${baseUrl}${imgPath}` : "";
+  const fastImgSrc = imgSrc ? imgSrc.replace(/\/original(?=\/)/, "/w1280") : "";
+
+  const BLUR_DATA_URL =
+    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 
   return (
     <div className="flex flex-col space-y-2 py-16 md:space-y-4 lg:h-[65vh] lg:justify-end lg:pb-12">
       <div className="absolute top-0 left-0 -z-10 h-[95vh] w-screen">
-        {imgSrc && (
+        {fastImgSrc && (
           <Image
-            src={imgSrc}
+            src={fastImgSrc}
             alt={movie?.title || movie?.name || "Banner Image"}
             fill
             sizes="100vw"
             priority
+            quality={60}
+            placeholder="blur"
+            blurDataURL={BLUR_DATA_URL}
             className="object-cover"
           />
         )}
