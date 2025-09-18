@@ -11,7 +11,9 @@ import { modalState } from "../../atoms/modalAtom";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import Modal from "../../components/Modal";
 
-const BannerComp = Banner as unknown as React.ComponentType<{ netflixOriginals: Movie[] }>;
+const BannerComp = Banner as unknown as React.ComponentType<{
+  netflixOriginals: Movie[];
+}>;
 
 export default function Page() {
   return (
@@ -51,26 +53,42 @@ function HomeContent() {
           romanceMovies,
           documentaries,
         ] = await Promise.all([
-          fetch(requests.fetchNetflixOriginals, { cache: "no-store" }).then((r) => r.json()),
-          fetch(requests.fetchTrending,          { cache: "no-store" }).then((r) => r.json()),
-          fetch(requests.fetchTopRated,          { cache: "no-store" }).then((r) => r.json()),
-          fetch(requests.fetchActionMovies,      { cache: "no-store" }).then((r) => r.json()),
-          fetch(requests.fetchComedyMovies,      { cache: "no-store" }).then((r) => r.json()),
-          fetch(requests.fetchHorrorMovies,      { cache: "no-store" }).then((r) => r.json()),
-          fetch(requests.fetchRomanceMovies,     { cache: "no-store" }).then((r) => r.json()),
-          fetch(requests.fetchDocumentaries,     { cache: "no-store" }).then((r) => r.json()),
+          fetch(requests.fetchNetflixOriginals, { cache: "no-store" }).then(
+            (r) => r.json()
+          ),
+          fetch(requests.fetchTrending, { cache: "no-store" }).then((r) =>
+            r.json()
+          ),
+          fetch(requests.fetchTopRated, { cache: "no-store" }).then((r) =>
+            r.json()
+          ),
+          fetch(requests.fetchActionMovies, { cache: "no-store" }).then((r) =>
+            r.json()
+          ),
+          fetch(requests.fetchComedyMovies, { cache: "no-store" }).then((r) =>
+            r.json()
+          ),
+          fetch(requests.fetchHorrorMovies, { cache: "no-store" }).then((r) =>
+            r.json()
+          ),
+          fetch(requests.fetchRomanceMovies, { cache: "no-store" }).then((r) =>
+            r.json()
+          ),
+          fetch(requests.fetchDocumentaries, { cache: "no-store" }).then((r) =>
+            r.json()
+          ),
         ]);
 
         if (!cancelled) {
           setData({
             netflixOriginals: (netflixOriginals.results ?? []) as Movie[],
-            trendingNow:      (trendingNow.results ?? []) as Movie[],
-            topRated:         (topRated.results ?? []) as Movie[],
-            actionMovies:     (actionMovies.results ?? []) as Movie[],
-            comedyMovies:     (comedyMovies.results ?? []) as Movie[],
-            horrorMovies:     (horrorMovies.results ?? []) as Movie[],
-            romanceMovies:    (romanceMovies.results ?? []) as Movie[],
-            documentaries:    (documentaries.results ?? []) as Movie[],
+            trendingNow: (trendingNow.results ?? []) as Movie[],
+            topRated: (topRated.results ?? []) as Movie[],
+            actionMovies: (actionMovies.results ?? []) as Movie[],
+            comedyMovies: (comedyMovies.results ?? []) as Movie[],
+            horrorMovies: (horrorMovies.results ?? []) as Movie[],
+            romanceMovies: (romanceMovies.results ?? []) as Movie[],
+            documentaries: (documentaries.results ?? []) as Movie[],
           });
         }
       } catch (e) {
@@ -97,7 +115,11 @@ function HomeContent() {
   } = data;
 
   return (
-    <div className="relative h-screen bg-gradient-to-b from-transparent via-[#141414]/40 to-[#141414] lg:h-[140vh]">
+    <div
+      className={`relative h-screen bg-gradient-to-b lg:h-[140vh] ${
+        showModal && "!h-screen overflow-hidden"
+      }`}
+    >
       <Header />
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
         <BannerComp netflixOriginals={netflixOriginals} />
