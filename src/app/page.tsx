@@ -10,6 +10,7 @@ import { Movie } from "../../typings";
 import { modalState } from "../../atoms/modalAtom";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import Modal from "../../components/Modal";
+import Plans from "../../components/Plans";
 
 const BannerComp = Banner as unknown as React.ComponentType<{
   netflixOriginals: Movie[];
@@ -26,6 +27,7 @@ export default function Page() {
 function HomeContent() {
   const { loading } = useAuth();
   const showModal = useRecoilValue(modalState);
+  const subscription = false
 
   const [data, setData] = useState<{
     netflixOriginals: Movie[];
@@ -101,7 +103,11 @@ function HomeContent() {
     };
   }, []);
 
-  if (loading || !data) return null;
+  if (loading || !data || subscription === null) return null;
+
+  if (!subscription) return (
+    <Plans/>
+  )
 
   const {
     netflixOriginals,
