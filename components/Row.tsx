@@ -1,13 +1,14 @@
 "use client";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
-import { Movie } from "../typings";
-import Thumbnail from "./Thumbnail";
 import { useRef, useState, useEffect, useCallback } from "react";
+import type { DocumentData } from "firebase/firestore";
+import type { Movie } from "../typings";
+import Thumbnail from "./Thumbnail";
 
 interface Props {
   title: string;
-  movies: Movie[];
+  movies: Array<Movie | DocumentData>;
 }
 
 function Row({ title, movies }: Props) {
@@ -39,10 +40,7 @@ function Row({ title, movies }: Props) {
     const el = rowRef.current;
     if (!el) return;
     const { scrollLeft, clientWidth } = el;
-    const next =
-      direction === "left"
-        ? scrollLeft - clientWidth
-        : scrollLeft + clientWidth;
+    const next = direction === "left" ? scrollLeft - clientWidth : scrollLeft + clientWidth;
     el.scrollTo({ left: next, behavior: "smooth" });
   };
 
@@ -54,33 +52,27 @@ function Row({ title, movies }: Props) {
 
       <div className="group relative md:-ml-2">
         <ChevronLeftIcon
-          className={`absolute top-0 bottom-0 left-2 z-40 m-auto h-9 w-9 cursor-pointer transition hover:scale-125
-            ${canScrollLeft ? "opacity-0 group-hover:opacity-100" : "invisible"}
-          `}
+          className={`absolute top-0 bottom-0 left-2 z-40 m-auto h-9 w-9 cursor-pointer transition hover:scale-125 ${
+            canScrollLeft ? "opacity-0 group-hover:opacity-100" : "invisible"
+          }`}
           onClick={() => handleClick("left")}
         />
 
         <div
           ref={rowRef}
-          className="
-            flex items-center space-x-0.5 md:space-x-2.5 md:p-2
-            overflow-x-auto overflow-y-hidden whitespace-nowrap
-            [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
-          "
+          className="flex items-center space-x-0.5 md:space-x-2.5 md:p-2 overflow-x-auto overflow-y-hidden whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           role="region"
           aria-label={`${title} row`}
         >
-          {movies.map((movie) => (
-            <Thumbnail key={movie.id} movie={movie} />
+          {movies.map((movie: Movie | DocumentData) => (
+            <Thumbnail key={(movie as any).id ?? Math.random()} movie={movie as Movie} />
           ))}
         </div>
 
         <ChevronRightIcon
-          className={`absolute top-0 bottom-0 right-2 z-40 m-auto h-9 w-9 cursor-pointer transition hover:scale-125
-            ${
-              canScrollRight ? "opacity-0 group-hover:opacity-100" : "invisible"
-            }
-          `}
+          className={`absolute top-0 bottom-0 right-2 z-40 m-auto h-9 w-9 cursor-pointer transition hover:scale-125 ${
+            canScrollRight ? "opacity-0 group-hover:opacity-100" : "invisible"
+          }`}
           onClick={() => handleClick("right")}
         />
       </div>

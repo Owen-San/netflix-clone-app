@@ -7,7 +7,7 @@ import Row from "../../components/Row";
 import requests from "../../utils/requests";
 import useAuth from "../../hooks/useAuth";
 import { Movie } from "../../typings";
-import { modalState } from "../../atoms/modalAtom";
+import { modalState, movieState } from "../../atoms/modalAtom";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import Modal from "../../components/Modal";
 import Plans from "../../components/Plans";
@@ -18,6 +18,7 @@ import {
 } from "@invertase/firestore-stripe-payments";
 import app from "../../firebase";
 import useSubscription from "../../hooks/useSubscription";
+import useList from "../../hooks/useList";
 
 const BannerComp = Banner as unknown as React.ComponentType<{
   netflixOriginals: Movie[];
@@ -37,6 +38,8 @@ function HomeContent() {
   const { loading,user } = useAuth();
   const showModal = useRecoilValue(modalState);
   const subscription = useSubscription(user)
+  const movie = useRecoilValue(movieState)
+  const list = useList(user?.uid)
 
   const [data, setData] = useState<{
     netflixOriginals: Movie[];
@@ -172,6 +175,7 @@ function HomeContent() {
           <Row title="Trending Now" movies={trendingNow} />
           <Row title="Top Rated" movies={topRated} />
           <Row title="Action Thrillers" movies={actionMovies} />
+           {list.length > 0 && <Row title="My List" movies={list} />}
           <Row title="Comedies" movies={comedyMovies} />
           <Row title="Scary Movies" movies={horrorMovies} />
           <Row title="Romance Movies" movies={romanceMovies} />
