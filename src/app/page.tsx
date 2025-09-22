@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Header from "../../components/Header";
 import Banner from "../../components/Banner";
 import Row from "../../components/Row";
@@ -11,10 +11,19 @@ import { modalState } from "../../atoms/modalAtom";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import Modal from "../../components/Modal";
 import Plans from "../../components/Plans";
+import {
+  getStripePayments,
+  getProducts,
+  Product,
+} from "@invertase/firestore-stripe-payments";
+import app from "../../firebase";
+import useSubscription from "../../hooks/useSubscription";
 
 const BannerComp = Banner as unknown as React.ComponentType<{
   netflixOriginals: Movie[];
 }>;
+
+type TMDBResponse = { results?: Movie[] };
 
 export default function Page() {
   return (
@@ -25,9 +34,9 @@ export default function Page() {
 }
 
 function HomeContent() {
-  const { loading } = useAuth();
+  const { loading,user } = useAuth();
   const showModal = useRecoilValue(modalState);
-  const subscription = false
+  const subscription = useSubscription(user)
 
   const [data, setData] = useState<{
     netflixOriginals: Movie[];
@@ -38,62 +47,91 @@ function HomeContent() {
     horrorMovies: Movie[];
     romanceMovies: Movie[];
     documentaries: Movie[];
+    products: Product[];
   } | null>(null);
+
+  const payments = useMemo(
+    () =>
+      getStripePayments(app, {
+        productsCollection: "products",
+        customersCollection: "customers",
+      }),
+    []
+  );
 
   useEffect(() => {
     let cancelled = false;
 
     (async () => {
       try {
+        const stripeProducts = await getProducts(payments, {
+          includePrices: true,
+          activeOnly: true,
+        });
+
         const [
-          netflixOriginals,
-          trendingNow,
-          topRated,
-          actionMovies,
-          comedyMovies,
-          horrorMovies,
-          romanceMovies,
-          documentaries,
+          netflixOriginalsRes,
+          trendingNowRes,
+          topRatedRes,
+          actionMoviesRes,
+          comedyMoviesRes,
+          horrorMoviesRes,
+          romanceMoviesRes,
+          documentariesRes,
         ] = await Promise.all([
           fetch(requests.fetchNetflixOriginals, { cache: "no-store" }).then(
             (r) => r.json()
-          ),
+          ) as Promise<TMDBResponse>,
           fetch(requests.fetchTrending, { cache: "no-store" }).then((r) =>
             r.json()
-          ),
+          ) as Promise<TMDBResponse>,
           fetch(requests.fetchTopRated, { cache: "no-store" }).then((r) =>
             r.json()
-          ),
+          ) as Promise<TMDBResponse>,
           fetch(requests.fetchActionMovies, { cache: "no-store" }).then((r) =>
             r.json()
-          ),
+          ) as Promise<TMDBResponse>,
           fetch(requests.fetchComedyMovies, { cache: "no-store" }).then((r) =>
             r.json()
-          ),
+          ) as Promise<TMDBResponse>,
           fetch(requests.fetchHorrorMovies, { cache: "no-store" }).then((r) =>
             r.json()
-          ),
+          ) as Promise<TMDBResponse>,
           fetch(requests.fetchRomanceMovies, { cache: "no-store" }).then((r) =>
             r.json()
-          ),
+          ) as Promise<TMDBResponse>,
           fetch(requests.fetchDocumentaries, { cache: "no-store" }).then((r) =>
             r.json()
-          ),
+          ) as Promise<TMDBResponse>,
         ]);
 
         if (!cancelled) {
           setData({
-            netflixOriginals: (netflixOriginals.results ?? []) as Movie[],
-            trendingNow: (trendingNow.results ?? []) as Movie[],
-            topRated: (topRated.results ?? []) as Movie[],
-            actionMovies: (actionMovies.results ?? []) as Movie[],
-            comedyMovies: (comedyMovies.results ?? []) as Movie[],
-            horrorMovies: (horrorMovies.results ?? []) as Movie[],
-            romanceMovies: (romanceMovies.results ?? []) as Movie[],
-            documentaries: (documentaries.results ?? []) as Movie[],
+            netflixOriginals: (netflixOriginalsRes.results ?? []) as Movie[],
+            trendingNow: (trendingNowRes.results ?? []) as Movie[],
+            topRated: (topRatedRes.results ?? []) as Movie[],
+            actionMovies: (actionMoviesRes.results ?? []) as Movie[],
+            comedyMovies: (comedyMoviesRes.results ?? []) as Movie[],
+            horrorMovies: (horrorMoviesRes.results ?? []) as Movie[],
+            romanceMovies: (romanceMoviesRes.results ?? []) as Movie[],
+            documentaries: (documentariesRes.results ?? []) as Movie[],
+            products: stripeProducts ?? [],
           });
         }
       } catch (e) {
+        if (!cancelled) {
+          setData({
+            netflixOriginals: [],
+            trendingNow: [],
+            topRated: [],
+            actionMovies: [],
+            comedyMovies: [],
+            horrorMovies: [],
+            romanceMovies: [],
+            documentaries: [],
+            products: [],
+          });
+        }
         console.error("Failed to fetch home data:", e);
       }
     })();
@@ -101,13 +139,13 @@ function HomeContent() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [payments]);
 
-  if (loading || !data || subscription === null) return null;
+  if (loading || subscription === null) return null;
 
-  if (!subscription) return (
-    <Plans/>
-  )
+  if (!subscription) return <Plans products={data?.products ?? []} />;
+
+  if (!data) return null;
 
   const {
     netflixOriginals,
@@ -118,12 +156,14 @@ function HomeContent() {
     horrorMovies,
     romanceMovies,
     documentaries,
+    products,
   } = data;
 
   return (
     <div
-      className={`relative h-screen bg-gradient-to-b from-transparent via-[#141414]/40 to-[#141414] lg:h-[140vh]
-    ${showModal && "!h-screen overflow-hidden"}`}
+      className={`relative h-screen bg-gradient-to-b from-transparent via-[#141414]/40 to-[#141414] lg:h-[140vh] ${
+        showModal && "!h-screen overflow-hidden"
+      }`}
     >
       <Header />
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">

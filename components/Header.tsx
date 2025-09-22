@@ -42,16 +42,15 @@ function Header() {
         <SearchIcon className="hidden h-6 w-6 sm:inline" />
         <p className="hidden lg:inline">Kids</p>
         <BellIcon className="h-6 w-6" />
-        {/* <Link href="/account"> */}
+        <Link href="/account">
           <Image
-          onClick={ logout }
             src="/kids.png"
             alt="Kids profile"
             width={32}
             height={32}
             className="cursor-pointer rounded"
           />
-        {/* </Link> */}
+        </Link>
       </div>
     </header>
   );
