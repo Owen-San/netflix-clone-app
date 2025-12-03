@@ -4,9 +4,13 @@ A sleek Netflix-style streaming UI built with **Next.js, React, TypeScript, Tail
 Showcases a cinematic UX: dynamic hero banner, interactive rows, and a trailer modal with mute/unmute — all fully responsive.
 
 ---
+## 🌐 Live Demo
+
+  - [Vercel Deployment](https://netflix-clone-app-murex-five.vercel.app/)
+
+---
 
 ## 📑 Table of Contents
-- [🌐 Live Demo](#-live-demo-optional)
 - [✨ Introduction](#-introduction)
 - [🚀 Features](#-features)
 - [🛠 Tech Stack](#-tech-stack)
@@ -19,6 +23,7 @@ Showcases a cinematic UX: dynamic hero banner, interactive rows, and a trailer m
 - [📄 License](#-license)
 
 ---
+
 
 ## ✨ Introduction
 
@@ -172,11 +177,6 @@ Place these in `.env.local`:
 
 ---
 
-## 🌐 Live Demo
-
-  - [Vercel Deployment](https://netflix-clone-app-murex-five.vercel.app/)
-
----
 
 ## 📄 License
 
