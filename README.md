@@ -6,6 +6,7 @@ Showcases a cinematic UX: dynamic hero banner, interactive rows, and a trailer m
 ---
 
 ## 📑 Table of Contents
+- [🌐 Live Demo](#-live-demo-optional)
 - [✨ Introduction](#-introduction)
 - [🚀 Features](#-features)
 - [🛠 Tech Stack](#-tech-stack)
@@ -15,7 +16,6 @@ Showcases a cinematic UX: dynamic hero banner, interactive rows, and a trailer m
 - [📜 Scripts](#-scripts)
 - [🎮 Usage Guide](#-usage-guide)
 - [🩹 Troubleshooting & Tips](#-troubleshooting--tips)
-- [🌐 Live Demo](#-live-demo-optional)
 - [📄 License](#-license)
 
 ---
